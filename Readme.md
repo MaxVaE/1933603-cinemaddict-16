@@ -1,7 +1,7 @@
 # Проект «Киноман»
 
 * Студент: [Максим](https://up.htmlacademy.ru/ecmascript/16/user/1933603).
-* Наставник: `Неизвестно`.
+* Наставник: [Кирилл Чистяков](https://htmlacademy.ru/profile/id149394).
 
 ---
 
