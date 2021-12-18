@@ -1,28 +1,33 @@
-import { generationDate, getRandomInteger } from './commonFunc';
-import { generationComments } from './comment';
+import { generateDate, getRandomInteger } from './commonFunctions';
+import { generateComments } from './comment';
+
+import theDanceOfLife from '../../public/images/posters/the-dance-of-life.jpg';
+import sagebrushTrail from '../../public/images/posters/sagebrush-trail.jpg';
+import theManWithTheGoldenArm from '../../public/images/posters/the-man-with-the-golden-arm.jpg';
+import santaClausConquersTheMartians from '../../public/images/posters/santa-claus-conquers-the-martians.jpg';
 
 export function generateFilm() {
-  const { title, poster } = generationTitle();
+  const { title, poster } = generateTitleAndPoster();
 
   return {
     title,
     originalTitle: title,
     poster,
-    rating: generationRating(),
+    rating: generateRating(),
     director: 'Anthony Mann',
     writers: ['Anne Wigton', 'Heinz Herald', 'Richard Weil'],
     actors: ['Erich von Stroheim', 'Mary Beth Hughes', 'Dan Duryea'],
-    releaseDate: generationDate(30, 11, 50),
+    releaseDate: generateDate(30, 11),
     runtime: getRandomInteger(60, 200),
     country: 'USA',
-    genres: generationGenres(),
+    genres: generateGenres(),
     description: generateDescription(),
     ageRating: getRandomInteger(0, 20),
-    comments: generationComments(),
+    comments: generateComments(),
     userDetails: {
       watchlist: getRandomInteger(),
       alreadyWatched: getRandomInteger(),
-      watchingDate: generationWatchingDate(),
+      watchingDate: generateWatchingDate(),
       favorite: getRandomInteger()
     }
   };
@@ -54,7 +59,7 @@ function generateDescription() {
   return discription;
 }
 
-function generationGenres() {
+function generateGenres() {
   const genres = [
     'Drama',
     'Film-Noir',
@@ -63,18 +68,18 @@ function generationGenres() {
     'Western',
   ];
 
-  const randomCount = getRandomInteger(1, 3);
+  const randomCount = getRandomInteger(1, 6);
 
-  const genre = [];
+  const genre = new Set();
   for (let i = 0; i < randomCount; i++) {
     const randomIndex = getRandomInteger(0, genres.length - 1);
-    genre.push(genres[randomIndex]);
+    genre.add(genres[randomIndex]);
   }
 
-  return genre;
+  return [...genre];
 }
 
-function generationTitle() {
+function generateTitleAndPoster() {
   const titles = [
     'The Dance of Life',
     'Sagebrush Trail',
@@ -83,10 +88,10 @@ function generationTitle() {
   ];
 
   const posters = [
-    './images/posters/the-dance-of-life.jpg',
-    './images/posters/sagebrush-trail.jpg',
-    './images/posters/the-man-with-the-golden-arm.jpg',
-    './images/posters/santa-claus-conquers-the-martians.jpg',
+    theDanceOfLife,
+    sagebrushTrail,
+    theManWithTheGoldenArm,
+    santaClausConquersTheMartians,
   ];
 
   const randomIndex = getRandomInteger(0, titles.length - 1);
@@ -94,10 +99,10 @@ function generationTitle() {
   return { title: titles[randomIndex], poster: posters[randomIndex] };
 }
 
-function generationRating() {
+function generateRating() {
   return (getRandomInteger(5, 9) + (getRandomInteger(0, 9) / 10)).toFixed(1);
 }
 
-function generationWatchingDate() {
-  return getRandomInteger() ? generationDate(30, 11, 1) : null;
+function generateWatchingDate() {
+  return getRandomInteger() ? generateDate(30, 11, 21) : null;
 }

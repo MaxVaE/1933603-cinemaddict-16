@@ -6,6 +6,7 @@ import { filmCard } from './view/film-card';
 import { detailsFilm } from './view/details-film';
 import { countMoviesInside } from './view/count-movies-inside';
 import { generateFilm } from './mock/film';
+import { renderTemplate, RenderPosition } from './utils';
 
 const FILM_COUNT = 20;
 const CARD_COUNT_PER_STEP = 5;
@@ -15,50 +16,40 @@ for (let i = 0; i < FILM_COUNT; i++) {
   films.push(generateFilm());
 }
 
-const RenderPosition = {
-  BEFOREBEGIN: 'beforebegin',
-  AFTERBEGIN: 'afterbegin',
-  BEFOREEND: 'beforeend',
-  AFTEREND: 'afterend',
-};
-
-function renderTemplate(container, template, place) {
-  container.insertAdjacentHTML(place, template);
-}
-
 const userDetails = {
   watched: 0,
   totalDuration: 0,
   genres: new Map(),
 };
 
+const filtersMenu = {
+  watchlist: 0,
+  history: 0,
+  favorites: 0,
+};
+
 films.forEach((film) => {
-  if (film.userDetails.watchingDate) {
-    userDetails.watched += 1;
+  if (film.userDetails.watchlist) {
+    filtersMenu.watchlist++;
+  }
+
+  if (film.userDetails.alreadyWatched) {
+    filtersMenu.history++;
+
+    userDetails.watched++;
     userDetails.totalDuration += film.runtime;
 
     for (const genre of film.genres) {
-      if (!userDetails.genres.get(genre)) {
+      if (!userDetails.genres.has(genre)) {
         userDetails.genres.set(genre, 1);
         break;
       }
       userDetails.genres.set(genre, userDetails.genres.get(genre) + 1);
     }
   }
-});
 
-const filtersMenu = {
-  watchlist: 0,
-  history: userDetails.watched,
-  favorites: 0,
-};
-
-films.forEach((film) => {
-  if (film.userDetails.watchlist) {
-    filtersMenu.watchlist += 1;
-  }
   if (film.userDetails.favorite) {
-    filtersMenu.favorites += 1;
+    filtersMenu.favorites++;
   }
 });
 

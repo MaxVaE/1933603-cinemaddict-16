@@ -1,9 +1,20 @@
+import { createImage } from '../utils';
+
 export function userRank(userDetails) {
+
+  const avatar = {
+    src: 'images/bitmap@2x.png',
+    width: 35,
+    height: 35,
+    alt: 'Avatar',
+    className: 'statistic__img',
+  };
+
   return (
     `<section class="statistic">
       <p class="statistic__rank">
         Your rank
-        <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
+        ${createImage(avatar)}
         <span class="statistic__rank-label">${determineRank(userDetails.watched)}</span>
       </p>
 
@@ -37,7 +48,7 @@ export function userRank(userDetails) {
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Top genre</h4>
-          <p class="statistic__item-text">${[...userDetails.genres.entries()].reduce((a, b) => b[1] > a[1] ? b : a)[0]}</p>
+          <p class="statistic__item-text">${getTopGenre(userDetails.genres)}</p>
         </li>
       </ul>
 
@@ -47,6 +58,20 @@ export function userRank(userDetails) {
 
     </section>`
   );
+}
+
+function getTopGenre(genres) {
+  let topGenre = '';
+  for (const genre of genres) {
+    if (!genres.has(topGenre)) {
+      topGenre = genre[0];
+    }
+
+    if (genre[1] > genres.get(topGenre)) {
+      topGenre = genre[0];
+    }
+  }
+  return topGenre;
 }
 
 function determineRank(watched) {

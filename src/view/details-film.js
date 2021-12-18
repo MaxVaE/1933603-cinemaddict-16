@@ -1,4 +1,7 @@
 import { commentFilm } from './comment-film';
+import { createImage, getRuntime } from '../utils';
+import dayjs from 'dayjs';
+
 export function detailsFilm(film) {
   return (
     `<section class="film-details">
@@ -9,7 +12,7 @@ export function detailsFilm(film) {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="${film.poster}" alt="">
+              ${createImage({src: film.poster, className: 'film-details__poster-img'})}
 
               <p class="film-details__age">${film.ageRating}+</p>
             </div>
@@ -65,9 +68,9 @@ export function detailsFilm(film) {
           </div>
 
           <section class="film-details__controls">
-            <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-            <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-            <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
+            <button type="button" class="film-details__control-button${checkActiveControlButton(film.userDetails.watchlist)} film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
+            <button type="button" class="film-details__control-button${checkActiveControlButton(film.userDetails.alreadyWatched)} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
+            <button type="button" class="film-details__control-button${checkActiveControlButton(film.userDetails.favorite)} film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
           </section>
         </div>
 
@@ -116,9 +119,7 @@ export function detailsFilm(film) {
 }
 
 function getReleaseDate(date) {
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-  return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+  return dayjs(date).format('DD MMMM YYYY');
 }
 
 function getCommentsLi(comments){
@@ -131,6 +132,6 @@ function getGenresElem(genres) {
     .join('');
 }
 
-function getRuntime(time) {
-  return `${(time / 60).toFixed(0)}h ${time % 60}m`;
+function checkActiveControlButton(active) {
+  return active ? ' film-details__control-button--active' : '';
 }

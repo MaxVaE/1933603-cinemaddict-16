@@ -1,8 +1,31 @@
+import { createImage } from '../utils';
+import dayjs from 'dayjs';
+
+import angry from '../../public/images/emoji/angry.png';
+import puke from '../../public/images/emoji/puke.png';
+import sleeping from '../../public/images/emoji/sleeping.png';
+import smile from '../../public/images/emoji/smile.png';
+
+const emoji = {
+  angry,
+  puke,
+  sleeping,
+  smile,
+};
+
 export function commentFilm(comment) {
+
+  const smiley = {
+    src: emoji[comment.emotion],
+    width: 55,
+    height: 55,
+    alt: 'emoji',
+  };
+
   return (
     `<li class="film-details__comment">
     <span class="film-details__comment-emoji">
-      <img src="${comment.emotion}" width="55" height="55" alt="emoji-smile">
+    ${createImage(smiley)}
     </span>
     <div>
       <p class="film-details__comment-text">${comment.comment}</p>
@@ -17,5 +40,5 @@ export function commentFilm(comment) {
 }
 
 function parseDate(date) {
-  return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+  return dayjs(date).format('YYYY/MM/DD H:mm');
 }

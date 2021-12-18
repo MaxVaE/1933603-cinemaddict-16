@@ -1,4 +1,4 @@
-import { generationDate, getRandomInteger, generation } from './commonFunc';
+import { generateDate, getRandomInteger, getRandomItemFromArray } from './commonFunctions';
 
 const comments = [
   'His ignorance was as remarkable as his knowledge.',
@@ -9,10 +9,10 @@ const comments = [
 ];
 
 const emotions = [
-  './images/emoji/angry.png',
-  './images/emoji/puke.png',
-  './images/emoji/sleeping.png',
-  './images/emoji/smile.png',
+  'angry',
+  'puke',
+  'sleeping',
+  'smile',
 ];
 
 const authors = [
@@ -23,20 +23,18 @@ const authors = [
   'Cristoforo Colombo',
 ];
 
-export function generationComments() {
+export function generateComments() {
   const quantityComments = getRandomInteger(0, 5);
 
   const commentsList = [];
   for (let i = 0; i < quantityComments; i++) {
     commentsList.push({
-      emotion: generation(emotions),
-      date: generationDate(30, 11, 5),
-      author: generation(authors),
-      comment: generation(comments),
+      emotion: getRandomItemFromArray(emotions),
+      date: generateDate(30, 11),
+      author: getRandomItemFromArray(authors),
+      comment: getRandomItemFromArray(comments),
     });
   }
 
   return commentsList;
 }
-
-
