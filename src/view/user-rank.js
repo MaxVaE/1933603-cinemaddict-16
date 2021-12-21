@@ -1,10 +1,21 @@
-export function userRank () {
+import { createImage } from '../utils';
+
+export function userRank(userDetails) {
+
+  const avatar = {
+    src: 'images/bitmap@2x.png',
+    width: 35,
+    height: 35,
+    alt: 'Avatar',
+    className: 'statistic__img',
+  };
+
   return (
     `<section class="statistic">
       <p class="statistic__rank">
         Your rank
-        <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-        <span class="statistic__rank-label">Movie buff</span>
+        ${createImage(avatar)}
+        <span class="statistic__rank-label">${determineRank(userDetails.watched)}</span>
       </p>
 
       <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -29,20 +40,17 @@ export function userRank () {
       <ul class="statistic__text-list">
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">You watched</h4>
-          <p class="statistic__item-text">28 <span class="statistic__item-description">movies</span></p>
+          <p class="statistic__item-text">${userDetails.watched} <span class="statistic__item-description">movies</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Total duration</h4>
-          <p class="statistic__item-text">69 <span class="statistic__item-description">h</span> 41 <span class="statistic__item-description">m</span></p>
+          <p class="statistic__item-text">${(userDetails.totalDuration / 60).toFixed(0)} <span class="statistic__item-description">h</span> ${userDetails.totalDuration % 60} <span class="statistic__item-description">m</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Top genre</h4>
-          <p class="statistic__item-text">Drama</p>
+          <p class="statistic__item-text">${getTopGenre(userDetails.genres)}</p>
         </li>
       </ul>
-
-      <!-- Пример диаграммы -->
-      <img src="images/cinemaddict-stats-markup.png" alt="Пример диаграммы">
 
       <div class="statistic__chart-wrap">
         <canvas class="statistic__chart" width="1000"></canvas>
@@ -50,4 +58,39 @@ export function userRank () {
 
     </section>`
   );
+}
+
+function getTopGenre(genres) {
+  let topGenre = '';
+  for (const genre of genres) {
+    if (!genres.has(topGenre)) {
+      topGenre = genre[0];
+    }
+
+    if (genre[1] > genres.get(topGenre)) {
+      topGenre = genre[0];
+    }
+  }
+  return topGenre;
+}
+
+function determineRank(watched) {
+  if (watched === 0) { return ''; }
+
+  const rank = [
+    'Novice',
+    'Fan',
+    'Movie buff',
+  ];
+
+  let rankIndex = 0;
+
+  if (watched > 20) {
+    rankIndex = 2;
+  }
+  else if (watched > 10) {
+    rankIndex = 1;
+  }
+
+  return rank[rankIndex];
 }
