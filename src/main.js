@@ -70,12 +70,12 @@ function renderFilms (filmListElement, film) {
   }
 
   filmComponent.element.querySelector('.film-card__comments').addEventListener('click', () => {
-    document.body.style.overflowY = 'hidden';
+    document.body.className = 'hide-overflow';
     openDetailsFilm();
   });
 
   detailsFilmComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
-    document.body.style.overflowY = 'scroll';
+    document.body.classList.remove('hide-overflow');
     closeDetailsFilm();
   });
 
