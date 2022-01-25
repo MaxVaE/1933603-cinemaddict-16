@@ -1,6 +1,7 @@
+import { createElement } from '../render';
 import { createImage } from '../utils';
 
-export function userRank(userDetails) {
+function createUserRankTemplate(userDetails) {
 
   const avatar = {
     src: 'images/bitmap@2x.png',
@@ -93,4 +94,29 @@ function determineRank(watched) {
   }
 
   return rank[rankIndex];
+}
+
+export default class UserRankView {
+  #element = null;
+  #userDetails = null;
+
+  constructor (userDetails) {
+    this.#userDetails = userDetails;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createUserRankTemplate(this.#userDetails);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
 }

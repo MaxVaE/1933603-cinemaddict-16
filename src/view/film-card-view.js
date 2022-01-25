@@ -1,6 +1,7 @@
 import { createImage, getRuntime } from '../utils';
+import { createElement } from '../render';
 
-export function filmCard(film) {
+function createFilmCardTemplate(film) {
   return (
     `<article class="film-card">
       <a class="film-card__link">
@@ -26,4 +27,29 @@ export function filmCard(film) {
 
 function checkActiveControlsItem(active) {
   return active ? ' film-card__controls-item--active' : '';
+}
+
+export default class FilmCardView {
+  #element = null;
+  #film = null;
+
+  constructor (film) {
+    this.#film = film;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createFilmCardTemplate(this.#film);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
 }
