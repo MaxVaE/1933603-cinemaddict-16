@@ -1,8 +1,9 @@
 import { commentFilm } from './comment-film';
 import { createImage, getRuntime } from '../utils';
 import dayjs from 'dayjs';
+import { createElement } from '../render';
 
-export function detailsFilm(film) {
+function createDetailsFilmTemplate(film) {
   return (
     `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -79,7 +80,7 @@ export function detailsFilm(film) {
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
 
             <ul class="film-details__comments-list">
-              ${getCommentsLi(film.comments)}
+              ${getCommentsList(film.comments)}
             </ul>
 
             <div class="film-details__new-comment">
@@ -122,7 +123,7 @@ function getReleaseDate(date) {
   return dayjs(date).format('DD MMMM YYYY');
 }
 
-function getCommentsLi(comments){
+function getCommentsList(comments){
   return comments.map((comment) => commentFilm(comment))
     .join(' ');
 }
@@ -134,4 +135,29 @@ function getGenresElem(genres) {
 
 function checkActiveControlButton(active) {
   return active ? ' film-details__control-button--active' : '';
+}
+
+export default class DetailsFilmView {
+  #element = null;
+  #film = null;
+
+  constructor (film) {
+    this.#film = film;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createDetailsFilmTemplate(this.#film);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
 }

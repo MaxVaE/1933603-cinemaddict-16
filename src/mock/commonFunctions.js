@@ -15,8 +15,8 @@ export function getRandomInteger(a = 0, b = 1) {
 
 export function generateDate(day, month, year = 20) {
   return dayjs()
-    .day(getRandomInteger(-day, day))
-    .month(getRandomInteger(-month, month))
+    .day(getRandomInteger(0, day))
+    .month(getRandomInteger(0, month))
     .year(getRandomInteger(1900, 2000 + year))
     .toDate();
 }
