@@ -11,7 +11,7 @@ import FilmsListContainerView from './view/films-list-container-view';
 import NoFilmCardsView from './view/no-film-cards-view';
 
 import { generateFilm } from './mock/film';
-import { render, RenderPosition } from './render';
+import { appendOrRemove, render, RenderPosition, remove } from './utils/render';
 
 const FILM_COUNT = 20;
 const CARD_COUNT_PER_STEP = 5;
@@ -64,12 +64,12 @@ function renderFilms(filmListElement, film) {
 
   function openDetailsFilm() {
     document.body.className = 'hide-overflow';
-    filmListElement.appendChild(detailsFilmComponent.element);
+    appendOrRemove(filmListElement, detailsFilmComponent);
   }
 
   function closeDetailsFilm() {
     document.body.classList.remove('hide-overflow');
-    filmListElement.removeChild(detailsFilmComponent.element);
+    appendOrRemove(filmListElement, detailsFilmComponent, true);
   }
 
   function onEscKeyDown(evt) {
@@ -80,52 +80,51 @@ function renderFilms(filmListElement, film) {
     }
   }
 
-  filmComponent.element.querySelector('.film-card__comments').addEventListener('click', () => {
+  filmComponent.setOpenDetailsHandler(() => {
     openDetailsFilm();
     document.addEventListener('keydown', onEscKeyDown);
   });
 
-  detailsFilmComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
+  detailsFilmComponent.setCloseDetailsHandler(() => {
     closeDetailsFilm();
     document.addEventListener('keydown', onEscKeyDown);
   });
 
-  render(filmListElement, filmComponent.element, RenderPosition.BEFOREEND);
+  render(filmListElement, filmComponent, RenderPosition.BEFOREEND);
 }
 
 function renderListFilms(listFilmsContainer, listFilms) {
   const sectionFilmsComponent = new SectionFilmsView();
-  render(listFilmsContainer, sectionFilmsComponent.element, RenderPosition.BEFOREEND);
+  render(listFilmsContainer, sectionFilmsComponent, RenderPosition.BEFOREEND);
 
   const filmsListComponent = new FilmsListView(listFilms.length);
-  render(sectionFilmsComponent.element, filmsListComponent.element, RenderPosition.AFTERBEGIN);
+  render(sectionFilmsComponent, filmsListComponent, RenderPosition.AFTERBEGIN);
 
-  render(filmsListComponent.element, new NoFilmCardsView(listFilms.length).element, RenderPosition.AFTERBEGIN);
+  render(filmsListComponent, new NoFilmCardsView(listFilms.length), RenderPosition.AFTERBEGIN);
 
 
   if (listFilms.length > 0) {
     const filmsListContainerComponent = new FilmsListContainerView();
-    render(filmsListComponent.element, filmsListContainerComponent.element, RenderPosition.BEFOREEND);
+    render(filmsListComponent, filmsListContainerComponent, RenderPosition.BEFOREEND);
 
     for (let i = 0; i < Math.min(listFilms.length, CARD_COUNT_PER_STEP); i++) {
-      renderFilms(filmsListContainerComponent.element, listFilms[i]);
+      renderFilms(filmsListContainerComponent, listFilms[i]);
     }
 
     const showMoreComponent = new ShowMoreView(listFilms.length);
-    render(filmsListComponent.element, showMoreComponent.element, RenderPosition.BEFOREEND);
+    render(filmsListComponent, showMoreComponent, RenderPosition.BEFOREEND);
 
     if (listFilms.length > CARD_COUNT_PER_STEP) {
       let renderFilmsCount = CARD_COUNT_PER_STEP;
 
-      showMoreComponent.element.addEventListener('click', (evt) => {
-        evt.preventDefault();
+      showMoreComponent.setShowMoreHandler(() => {
         listFilms
           .slice(renderFilmsCount, renderFilmsCount + CARD_COUNT_PER_STEP)
-          .forEach((film) => renderFilms(filmsListContainerComponent.element, film));
+          .forEach((film) => renderFilms(filmsListContainerComponent, film));
         renderFilmsCount += CARD_COUNT_PER_STEP;
 
         if (renderFilmsCount >= listFilms.length) {
-          showMoreComponent.element.remove();
+          remove(showMoreComponent);
         }
       });
     }
@@ -134,14 +133,14 @@ function renderListFilms(listFilmsContainer, listFilms) {
 
 const siteMainElement = document.querySelector('.main');
 
-render(siteMainElement, new SortView(filtersMenu).element, RenderPosition.AFTERBEGIN);
-render(siteMainElement, new MenuNavigationView(filtersMenu).element, RenderPosition.AFTERBEGIN);
+render(siteMainElement, new SortView(filtersMenu), RenderPosition.AFTERBEGIN);
+render(siteMainElement, new MenuNavigationView(filtersMenu), RenderPosition.AFTERBEGIN);
 
 if (userDetails.watched > 0) {
-  render(siteMainElement, new UserRankView(userDetails).element, RenderPosition.BEFOREEND);
+  render(siteMainElement, new UserRankView(userDetails), RenderPosition.BEFOREEND);
 }
 
 renderListFilms(siteMainElement, films);
 
 const siteFooterElement = document.querySelector('.footer__statistics');
-render(siteFooterElement, new CountMoviesInsideView(FILM_COUNT).element, RenderPosition.AFTERBEGIN);
+render(siteFooterElement, new CountMoviesInsideView(FILM_COUNT), RenderPosition.AFTERBEGIN);

@@ -1,7 +1,7 @@
 import { commentFilm } from './comment-film';
-import { createImage, getRuntime } from '../utils';
+import { createImage, getRuntime } from '../utils/film';
 import dayjs from 'dayjs';
-import { createElement } from '../render';
+import AbstractView from './abstract-view';
 
 function createDetailsFilmTemplate(film) {
   return (
@@ -137,27 +137,26 @@ function checkActiveControlButton(active) {
   return active ? ' film-details__control-button--active' : '';
 }
 
-export default class DetailsFilmView {
-  #element = null;
+export default class DetailsFilmView extends AbstractView {
   #film = null;
 
   constructor (film) {
+    super();
+
     this.#film = film;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createDetailsFilmTemplate(this.#film);
   }
 
-  removeElement() {
-    this.#element = null;
+  setCloseDetailsHandler(callback) {
+    this._callback.closeDetails = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closeDetailsHandler);
+  }
+
+  #closeDetailsHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.closeDetails();
   }
 }

@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from './abstract-view';
 
 function createShowMoreTemplate(quantityFilms) {
   return (
@@ -8,27 +8,26 @@ function createShowMoreTemplate(quantityFilms) {
   );
 }
 
-export default class ShowMoreView {
-  #element = null;
+export default class ShowMoreView extends AbstractView {
   #quantityFilms = null;
 
   constructor (quantityFilms) {
+    super();
+
     this.#quantityFilms = quantityFilms;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createShowMoreTemplate(this.#quantityFilms);
   }
 
-  removeElement() {
-    this.#element = null;
+  setShowMoreHandler = (callback) => {
+    this._callback.showMore = callback;
+    this.element.addEventListener('click', this.#showMoreHandler);
+  }
+
+  #showMoreHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.showMore();
   }
 }

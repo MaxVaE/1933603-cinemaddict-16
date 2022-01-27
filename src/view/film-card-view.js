@@ -1,5 +1,5 @@
-import { createImage, getRuntime } from '../utils';
-import { createElement } from '../render';
+import { createImage, getRuntime } from '../utils/film';
+import AbstractView from './abstract-view';
 
 function createFilmCardTemplate(film) {
   return (
@@ -29,27 +29,26 @@ function checkActiveControlsItem(active) {
   return active ? ' film-card__controls-item--active' : '';
 }
 
-export default class FilmCardView {
-  #element = null;
+export default class FilmCardView extends AbstractView {
   #film = null;
 
   constructor (film) {
+    super();
+
     this.#film = film;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createFilmCardTemplate(this.#film);
   }
 
-  removeElement() {
-    this.#element = null;
+  setOpenDetailsHandler(callback) {
+    this._callback.openDetails = callback;
+    this.element.querySelector('.film-card__comments').addEventListener('click', this.#openDetailsHandler);
+  }
+
+  #openDetailsHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.openDetails();
   }
 }

@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from './abstract-view';
 
 const filterTitle = {
   'All movies': 'There are no movies in our database',
@@ -16,29 +16,18 @@ function createNoFilmCardsTemplate(quantityFilms, navigationItem) {
   );
 }
 
-export default class NoFilmCardsView {
-  #element = null;
+export default class NoFilmCardsView extends AbstractView {
   #quantityFilms = null;
   #navigationItem = null;
 
   constructor (quantityFilms, navigationItem = 'All movies') {
+    super();
+
     this.#quantityFilms = quantityFilms;
     this.#navigationItem = navigationItem;
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
   get template() {
     return createNoFilmCardsTemplate(this.#quantityFilms, this.#navigationItem);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
