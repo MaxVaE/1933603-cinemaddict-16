@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from './abstract-view';
 
 function createCountMoviesInsideTemplate(count) {
   return (
@@ -6,27 +6,16 @@ function createCountMoviesInsideTemplate(count) {
   );
 }
 
-export default class CountMoviesInsideView {
-  #element = null;
+export default class CountMoviesInsideView extends AbstractView {
   #count = null;
 
   constructor (count) {
+    super();
+
     this.#count = count;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createCountMoviesInsideTemplate(this.#count);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

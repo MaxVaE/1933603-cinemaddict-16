@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from './abstract-view';
 
 function createMenuNavigationTemplate(filtersMenu) {
   return (
@@ -14,27 +14,16 @@ function createMenuNavigationTemplate(filtersMenu) {
   );
 }
 
-export default class MenuNavigationView {
-  #element = null;
+export default class MenuNavigationView extends AbstractView {
   #filtersMenu = null;
 
   constructor (filtersMenu) {
+    super();
+
     this.#filtersMenu = filtersMenu;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createMenuNavigationTemplate(this.#filtersMenu);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

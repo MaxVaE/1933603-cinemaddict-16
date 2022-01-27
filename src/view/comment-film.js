@@ -1,4 +1,4 @@
-import { createImage } from '../utils';
+import { createImage } from '../utils/film';
 import dayjs from 'dayjs';
 
 import angry from '../../public/images/emoji/angry.png';

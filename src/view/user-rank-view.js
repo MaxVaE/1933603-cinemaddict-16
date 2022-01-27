@@ -1,5 +1,5 @@
-import { createElement } from '../render';
-import { createImage } from '../utils';
+import { createImage } from '../utils/film';
+import AbstractView from './abstract-view';
 
 function createUserRankTemplate(userDetails) {
 
@@ -96,27 +96,16 @@ function determineRank(watched) {
   return rank[rankIndex];
 }
 
-export default class UserRankView {
-  #element = null;
+export default class UserRankView extends AbstractView {
   #userDetails = null;
 
   constructor (userDetails) {
+    super();
+
     this.#userDetails = userDetails;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createUserRankTemplate(this.#userDetails);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
