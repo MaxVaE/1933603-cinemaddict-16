@@ -60,8 +60,8 @@ if (userDetails.watched > 0) {
   render(siteMainElement, new UserRankView(userDetails), RenderPosition.BEFOREEND);
 }
 
-const filmPresenter = new FilmListPresenter(siteMainElement);
-filmPresenter.init(films);
+const filmListPresenter = new FilmListPresenter(siteMainElement);
+filmListPresenter.init(films);
 
 const siteFooterElement = document.querySelector('.footer__statistics');
 render(siteFooterElement, new CountMoviesInsideView(FILM_COUNT), RenderPosition.AFTERBEGIN);

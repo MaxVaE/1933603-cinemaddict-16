@@ -5,6 +5,7 @@ import angry from '../../public/images/emoji/angry.png';
 import puke from '../../public/images/emoji/puke.png';
 import sleeping from '../../public/images/emoji/sleeping.png';
 import smile from '../../public/images/emoji/smile.png';
+import AbstractView from './abstract-view';
 
 const emoji = {
   angry,
@@ -13,7 +14,7 @@ const emoji = {
   smile,
 };
 
-export function commentFilm(comment) {
+function createCommentFilmTemplate(comment) {
 
   const smiley = {
     src: emoji[comment.emotion],
@@ -41,4 +42,18 @@ export function commentFilm(comment) {
 
 function parseDate(date) {
   return dayjs(date).format('YYYY/MM/DD H:mm');
+}
+
+export default class CommentFilmView extends AbstractView {
+  #comment = null;
+
+  constructor (comment) {
+    super();
+
+    this.#comment = comment;
+  }
+
+  get template() {
+    return createCommentFilmTemplate(this.#comment);
+  }
 }

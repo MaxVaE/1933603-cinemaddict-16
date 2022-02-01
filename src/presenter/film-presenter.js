@@ -3,6 +3,7 @@ import FilmCardView from '../view/film-card-view';
 
 import dayjs from 'dayjs';
 import { render, RenderPosition, appendChild, removeChild, remove, replace } from '../utils/render';
+import CommentFilmView from '../view/comment-film-view';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -47,16 +48,16 @@ export default class FilmPresenter {
 
     if (prevFilmCardComponent === null || prevDetailsFilmComponent === null) {
       render(this.#filmListContainer, this.#filmCardComponent, RenderPosition.BEFOREEND);
+      this.#renderCommentsFilm();
       return;
-    }
-
-    if (this.#mode === Mode.DEFAULT) {
-      replace(this.#filmCardComponent, prevFilmCardComponent);
     }
 
     if (this.#mode === Mode.OPEN) {
       replace(this.#detailsFilmComponent, prevDetailsFilmComponent);
+      this.#renderCommentsFilm();
     }
+
+    replace(this.#filmCardComponent, prevFilmCardComponent);
 
     remove(prevFilmCardComponent);
     remove(prevDetailsFilmComponent);
@@ -70,13 +71,21 @@ export default class FilmPresenter {
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#removeDetailsFilm();
-      document.body.className = 'hide-overflow';
+      document.body.classList.add('hide-overflow');
     }
   }
 
+  #renderCommentsFilm = () => {
+    const commentsListSelector = this.#detailsFilmComponent.commentsListSelector;
+    this.#film.comments.forEach((comment) => {
+      const commentFilmComponent = new CommentFilmView(comment);
+      render(commentsListSelector, commentFilmComponent, RenderPosition.BEFOREEND);
+    });
+  }
+
   #appendDetailsFilm = () => {
-    document.body.className = 'hide-overflow';
-    appendChild(this.#filmListContainer, this.#detailsFilmComponent);
+    document.body.classList.add('hide-overflow');
+    appendChild(document.body, this.#detailsFilmComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
 
     this.#changeMode();
@@ -85,7 +94,7 @@ export default class FilmPresenter {
 
   #removeDetailsFilm = () => {
     document.body.classList.remove('hide-overflow');
-    removeChild(this.#filmListContainer, this.#detailsFilmComponent, true);
+    removeChild(document.body, this.#detailsFilmComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
 
     this.#mode = Mode.DEFAULT;

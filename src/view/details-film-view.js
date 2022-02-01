@@ -1,4 +1,3 @@
-import { commentFilm } from './comment-film';
 import { createImage, getRuntime } from '../utils/film';
 import dayjs from 'dayjs';
 import AbstractView from './abstract-view';
@@ -80,7 +79,6 @@ function createDetailsFilmTemplate(film) {
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
 
             <ul class="film-details__comments-list">
-              ${getCommentsList(film.comments)}
             </ul>
 
             <div class="film-details__new-comment">
@@ -123,11 +121,6 @@ function getReleaseDate(date) {
   return dayjs(date).format('DD MMMM YYYY');
 }
 
-function getCommentsList(comments){
-  return comments.map((comment) => commentFilm(comment))
-    .join(' ');
-}
-
 function getGenresElem(genres) {
   return genres.map((genre) => `<span class="film-details__genre">${genre}</span>`)
     .join('');
@@ -148,6 +141,10 @@ export default class DetailsFilmView extends AbstractView {
 
   get template() {
     return createDetailsFilmTemplate(this.#film);
+  }
+
+  get commentsListSelector() {
+    return this.element.querySelector('.film-details__comments-list');
   }
 
   setCloseDetailsHandler(callback) {

@@ -21,7 +21,7 @@ export default class FilmListPresenter {
 
   #films = [];
   #renderFilmsCount = CARD_COUNT_PER_STEP;
-  #filmPresenter = new Map();
+  #filmPresenters = new Map();
 
   constructor(filmContainer) {
     this.#filmContainer = filmContainer;
@@ -37,12 +37,12 @@ export default class FilmListPresenter {
   }
 
   #handleModeChange = () => {
-    this.#filmPresenter.forEach((presenter) => presenter.resetView());
+    this.#filmPresenters.forEach((presenter) => presenter.resetView());
   }
 
   #handleFilmCardChange = (updateFilm) => {
     updateItem(this.#films, updateFilm);
-    this.#filmPresenter.get(updateFilm.id).init(updateFilm);
+    this.#filmPresenters.get(updateFilm.id).init(updateFilm);
   }
 
   #renderSectionFilms = () => {
@@ -53,7 +53,7 @@ export default class FilmListPresenter {
   #renderFilm = (film) => {
     const filmPresenter = new FilmPresenter(this.#filmListContainerComponent, this.#handleFilmCardChange, this.#handleModeChange);
     filmPresenter.init(film);
-    this.#filmPresenter.set(film.id, filmPresenter);
+    this.#filmPresenters.set(film.id, filmPresenter);
   }
 
   #renderFilms = (from, to) => {
@@ -63,8 +63,8 @@ export default class FilmListPresenter {
   }
 
   #clearFilmList = () => {
-    this.#filmPresenter.forEach((presenter) => presenter.destroy());
-    this.#filmPresenter.clear();
+    this.#filmPresenters.forEach((presenter) => presenter.destroy());
+    this.#filmPresenters.clear();
     this.#renderFilmsCount = CARD_COUNT_PER_STEP;
     remove(this.#showMoreComponent);
   }
