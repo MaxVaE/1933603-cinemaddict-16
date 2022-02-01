@@ -1,24 +1,14 @@
 import AbstractView from './abstract-view';
 
-function createShowMoreTemplate(quantityFilms) {
+function createShowMoreTemplate() {
   return (
-    `${quantityFilms > 5
-      ? '<button class="films-list__show-more">Show more</button>'
-      : ''}`
+    '<button class="films-list__show-more">Show more</button>'
   );
 }
 
 export default class ShowMoreView extends AbstractView {
-  #quantityFilms = null;
-
-  constructor (quantityFilms) {
-    super();
-
-    this.#quantityFilms = quantityFilms;
-  }
-
   get template() {
-    return createShowMoreTemplate(this.#quantityFilms);
+    return createShowMoreTemplate();
   }
 
   setShowMoreHandler = (callback) => {
