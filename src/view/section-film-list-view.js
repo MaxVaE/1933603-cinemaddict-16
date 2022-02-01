@@ -7,7 +7,7 @@ function createFilmsTemplate() {
   );
 }
 
-export default class FilmsListView extends AbstractView {
+export default class SectionFilmListView extends AbstractView {
   get template() {
     return createFilmsTemplate();
   }

@@ -33,20 +33,46 @@ export function createElement(template) {
   return newElement.firstChild;
 }
 
-export function appendOrRemove(parentElement, childElement, isRemove = false) {
+export function appendChild(parentElement, childElement) {
   if (parentElement === null || childElement === null) {
-    throw new Error(`Can't ${isRemove ? 'remove' : 'append'} unexisting element`);
+    throw new Error('Can\'t append unexisting element');
   }
 
   const child = childElement instanceof AbstractView ? childElement.element : childElement;
   const parent = parentElement instanceof AbstractView ? parentElement.element : parentElement;
 
-  if (isRemove) {
-    parent.removeChild(child);
-    return;
+  parent.appendChild(child);
+}
+
+export function removeChild(parentElement, childElement) {
+  if (parentElement === null || childElement === null) {
+    throw new Error('Can\'t remove unexisting element');
   }
 
-  parent.appendChild(child);
+  const child = childElement instanceof AbstractView ? childElement.element : childElement;
+  const parent = parentElement instanceof AbstractView ? parentElement.element : parentElement;
+
+  parent.removeChild(child);
+}
+
+export function replace (newElement, oldElement) {
+  if (newElement === null || oldElement === null) {
+    throw new Error('Can\'t replace unexisting elements');
+  }
+
+  const newChild = newElement instanceof AbstractView ? newElement.element : newElement;
+  const oldChild = oldElement instanceof AbstractView ? oldElement.element : oldElement;
+
+  const scrollTop = oldChild.scrollTop;
+
+  const parent = oldChild.parentElement;
+
+  if (parent === null) {
+    throw new Error('Parent element doesn\'t exist');
+  }
+
+  parent.replaceChild(newChild, oldChild);
+  newChild.scrollTop = scrollTop;
 }
 
 export function remove(component) {

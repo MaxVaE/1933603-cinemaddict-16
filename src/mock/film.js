@@ -1,4 +1,5 @@
 import { generateDate, getRandomInteger } from './commonFunctions';
+import { nanoid } from 'nanoid';
 import { generateComments } from './comment';
 
 import theDanceOfLife from '../../public/images/posters/the-dance-of-life.jpg';
@@ -10,6 +11,7 @@ export function generateFilm() {
   const { title, poster } = generateTitleAndPoster();
 
   return {
+    id: nanoid(),
     title,
     originalTitle: title,
     poster,
@@ -28,8 +30,8 @@ export function generateFilm() {
       watchlist: getRandomInteger(),
       alreadyWatched: getRandomInteger(),
       watchingDate: generateWatchingDate(),
-      favorite: getRandomInteger()
-    }
+      favorite: getRandomInteger(),
+    },
   };
 }
 
