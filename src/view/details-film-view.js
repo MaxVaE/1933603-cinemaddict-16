@@ -1,6 +1,8 @@
-import { createImage, getRuntime } from '../utils/film';
-import dayjs from 'dayjs';
 import AbstractView from './abstract-view';
+
+import dayjs from 'dayjs';
+import { EMOJI } from '../utils/const';
+import { createImage, getRuntime } from '../utils/film';
 
 function createDetailsFilmTemplate(film) {
   return (
@@ -91,22 +93,22 @@ function createDetailsFilmTemplate(film) {
               <div class="film-details__emoji-list">
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
                 <label class="film-details__emoji-label" for="emoji-smile">
-                  <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
+                  <img src="${EMOJI.smile}" width="30" height="30" alt="emoji">
                 </label>
 
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
                 <label class="film-details__emoji-label" for="emoji-sleeping">
-                  <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
+                  <img src="${EMOJI.sleeping}" width="30" height="30" alt="emoji">
                 </label>
 
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
                 <label class="film-details__emoji-label" for="emoji-puke">
-                  <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
+                  <img src="${EMOJI.puke}" width="30" height="30" alt="emoji">
                 </label>
 
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
                 <label class="film-details__emoji-label" for="emoji-angry">
-                  <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
+                  <img src="${EMOJI.angry}" width="30" height="30" alt="emoji">
                 </label>
               </div>
             </div>

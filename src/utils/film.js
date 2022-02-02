@@ -24,3 +24,31 @@ export function updateItem(items, update) {
     ...items.slice(index + 1),
   ];
 }
+
+export function sortFilmsDate(filmA, filmB) {
+  const yearFilmA = filmA.releaseDate.getFullYear();
+  const yearFilmB = filmB.releaseDate.getFullYear();
+
+  if (yearFilmA > yearFilmB) {
+    return 1;
+  }
+  else if (yearFilmA < yearFilmB) {
+    return -1;
+  }
+
+  return 0;
+}
+
+export function sortFilmsRating(filmA, filmB) {
+  const ratingFilmA = Number(filmA.rating);
+  const ratingFilmB = Number(filmB.rating);
+
+  if (ratingFilmA > ratingFilmB) {
+    return 1;
+  }
+  else if (ratingFilmA < ratingFilmB) {
+    return -1;
+  }
+
+  return 0;
+}

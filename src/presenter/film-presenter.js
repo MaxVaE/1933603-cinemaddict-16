@@ -22,7 +22,7 @@ export default class FilmPresenter {
   #mode = Mode.DEFAULT;
 
   constructor(filmListContainer, changeData, changeMode) {
-    if (!filmListContainer || !changeData || changeMode) {
+    if (!filmListContainer || !changeData || !changeMode) {
       throw new Error('Can\'t create film');
     }
 

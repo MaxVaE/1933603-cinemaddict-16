@@ -1,23 +1,13 @@
-import { createImage } from '../utils/film';
-import dayjs from 'dayjs';
-
-import angry from '../../public/images/emoji/angry.png';
-import puke from '../../public/images/emoji/puke.png';
-import sleeping from '../../public/images/emoji/sleeping.png';
-import smile from '../../public/images/emoji/smile.png';
 import AbstractView from './abstract-view';
 
-const emoji = {
-  angry,
-  puke,
-  sleeping,
-  smile,
-};
+import { createImage } from '../utils/film';
+import { EMOJI } from '../utils/const';
+import dayjs from 'dayjs';
 
 function createCommentFilmTemplate(comment) {
 
   const smiley = {
-    src: emoji[comment.emotion],
+    src: EMOJI[comment.emotion],
     width: 55,
     height: 55,
     alt: 'emoji',
