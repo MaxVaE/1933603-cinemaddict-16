@@ -1,6 +1,3 @@
-import MenuNavigationView from './view/menu-navigation-view';
-import SortView from './view/sort-view';
-import UserRankView from './view/user-rank-view';
 import CountMoviesInsideView from './view/count-movies-inside-view';
 
 import { generateFilm } from './mock/film';
@@ -53,15 +50,8 @@ films.forEach((film) => {
 
 const siteMainElement = document.querySelector('.main');
 
-render(siteMainElement, new SortView(), RenderPosition.AFTERBEGIN);
-render(siteMainElement, new MenuNavigationView(filtersMenu), RenderPosition.AFTERBEGIN);
-
-if (userDetails.watched > 0) {
-  render(siteMainElement, new UserRankView(userDetails), RenderPosition.BEFOREEND);
-}
-
 const filmListPresenter = new FilmListPresenter(siteMainElement);
-filmListPresenter.init(films);
+filmListPresenter.init(films, filtersMenu);
 
 const siteFooterElement = document.querySelector('.footer__statistics');
 render(siteFooterElement, new CountMoviesInsideView(FILM_COUNT), RenderPosition.AFTERBEGIN);
