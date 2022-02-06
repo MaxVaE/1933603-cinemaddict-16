@@ -4,6 +4,7 @@ import FilmCardView from '../view/film-card-view';
 import dayjs from 'dayjs';
 import { render, RenderPosition, appendChild, removeChild, remove, replace } from '../utils/render';
 import CommentFilmView from '../view/comment-film-view';
+import NewCommentView from '../view/new-comment-view';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -17,8 +18,10 @@ export default class FilmPresenter {
 
   #filmCardComponent = null;
   #detailsFilmComponent = null;
+  #newCommentComponent = null;
 
   #film = null;
+  #comment = null;
   #mode = Mode.DEFAULT;
 
   constructor(filmListContainer, changeData, changeMode) {
@@ -41,24 +44,24 @@ export default class FilmPresenter {
     this.#detailsFilmComponent = new DetailsFilmView(film);
 
     this.#filmCardComponent.setOpenDetailsHandler(this.#handleOpenDetailsFim);
-    this.#filmCardComponent.setToggleWatchlistHandler(this.#hanleToggleWatchlist);
-    this.#filmCardComponent.setToggleWatchedHandler(this.#hanleToggleWatched);
-    this.#filmCardComponent.setToggleFavoriteHandler(this.#hanleToggleFavorite);
+    this.#filmCardComponent.setToggleWatchlistHandler(this.handleToggleWatchlist);
+    this.#filmCardComponent.setToggleWatchedHandler(this.handleToggleWatched);
+    this.#filmCardComponent.setToggleFavoriteHandler(this.handleToggleFavorite);
 
     this.#detailsFilmComponent.setCloseDetailsHandler(this.#handleCloseDetailsFilm);
-    this.#detailsFilmComponent.setToggleWatchlistHandler(this.#hanleToggleWatchlist);
-    this.#detailsFilmComponent.setToggleWatchedHandler(this.#hanleToggleWatched);
-    this.#detailsFilmComponent.setToggleFavoriteHandler(this.#hanleToggleFavorite);
+    this.#detailsFilmComponent.setToggleWatchlistHandler(this.handleToggleWatchlist);
+    this.#detailsFilmComponent.setToggleWatchedHandler(this.handleToggleWatched);
+    this.#detailsFilmComponent.setToggleFavoriteHandler(this.handleToggleFavorite);
 
     if (prevFilmCardComponent === null || prevDetailsFilmComponent === null) {
       render(this.#filmListContainer, this.#filmCardComponent, RenderPosition.BEFOREEND);
-      this.#renderCommentsFilm();
+      this.#renderCommentContainer();
       return;
     }
 
     if (this.#mode === Mode.OPEN) {
       replace(this.#detailsFilmComponent, prevDetailsFilmComponent);
-      this.#renderCommentsFilm();
+      this.#renderCommentContainer();
     }
 
     replace(this.#filmCardComponent, prevFilmCardComponent);
@@ -79,17 +82,35 @@ export default class FilmPresenter {
     }
   }
 
+  #renderCommentContainer = () => {
+    this.#renderCommentsFilm();
+    this.#renderNewComment();
+  }
+
   #renderCommentsFilm = () => {
     const commentsListSelector = this.#detailsFilmComponent.commentsListSelector;
+
     this.#film.comments.forEach((comment) => {
       const commentFilmComponent = new CommentFilmView(comment);
       render(commentsListSelector, commentFilmComponent, RenderPosition.BEFOREEND);
     });
   }
 
+  #renderNewComment = () => {
+    const newCommentsSelector = this.#detailsFilmComponent.newCommentSelector;
+
+    this.#newCommentComponent = new NewCommentView();
+
+    this.#newCommentComponent.setSubmitHandler(this.handleSubmitComment);
+
+    render(newCommentsSelector, this.#newCommentComponent, RenderPosition.BEFOREEND);
+  }
+
   #appendDetailsFilm = () => {
     document.body.classList.add('hide-overflow');
+
     appendChild(document.body, this.#detailsFilmComponent);
+
     document.addEventListener('keydown', this.#escKeyDownHandler);
 
     this.#changeMode();
@@ -98,10 +119,13 @@ export default class FilmPresenter {
 
   #removeDetailsFilm = () => {
     document.body.classList.remove('hide-overflow');
+
     removeChild(document.body, this.#detailsFilmComponent);
+
     document.removeEventListener('keydown', this.#escKeyDownHandler);
 
     this.#mode = Mode.DEFAULT;
+    this.#newCommentComponent.reset();
   }
 
   #escKeyDownHandler = (evt) => {
@@ -131,7 +155,7 @@ export default class FilmPresenter {
     this.#changeData(updateFilm);
   }
 
-  #hanleToggleWatchlist = () => {
+  handleToggleWatchlist = () => {
     this.#toggleWatchlist();
   }
 
@@ -152,7 +176,7 @@ export default class FilmPresenter {
     this.#changeData(updateFilm);
   }
 
-  #hanleToggleWatched = () => {
+  handleToggleWatched = () => {
     this.#toggleWatched();
   }
 
@@ -168,7 +192,15 @@ export default class FilmPresenter {
     this.#changeData(updateFilm);
   }
 
-  #hanleToggleFavorite = () => {
+  handleToggleFavorite = () => {
     this.#toggleFavorite();
+  }
+
+  #submitComment = (comment) => {
+    this.#comment = comment;
+  }
+
+  handleSubmitComment = (comment) => {
+    this.#submitComment(comment);
   }
 }
