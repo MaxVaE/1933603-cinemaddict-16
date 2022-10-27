@@ -5,7 +5,6 @@ import { EMOJI } from '../utils/const';
 import dayjs from 'dayjs';
 
 function createCommentFilmTemplate(comment) {
-
   const smiley = {
     src: EMOJI[comment.emotion],
     width: 55,
@@ -37,7 +36,7 @@ function parseDate(date) {
 export default class CommentFilmView extends AbstractView {
   #comment = null;
 
-  constructor (comment) {
+  constructor(comment) {
     super();
 
     this.#comment = comment;
@@ -45,5 +44,15 @@ export default class CommentFilmView extends AbstractView {
 
   get template() {
     return createCommentFilmTemplate(this.#comment);
+  }
+
+  setDeleteCommentHandler(callback) {
+    this._callback.deleteComment = callback;
+    this.element.querySelector('.film-details__comment-delete').addEventListener('click', this.#deleteCommentHandler);
+  }
+
+  #deleteCommentHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteComment(this.#comment);
   }
 }

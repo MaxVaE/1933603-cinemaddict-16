@@ -3,6 +3,8 @@ import CountMoviesInsideView from './view/count-movies-inside-view';
 import { generateFilm } from './mock/film';
 import { render, RenderPosition } from './utils/render';
 import FilmListPresenter from './presenter/film-list-presenter';
+import FlimsModel from './model/films-model';
+// import UserDetailsModel from './model/user-details-model';
 
 const FILM_COUNT = 20;
 const films = [];
@@ -48,10 +50,16 @@ films.forEach((film) => {
   }
 });
 
+const filmsModel = new FlimsModel();
+filmsModel.films = films;
+
+// const userDetailsModel = new UserDetailsModel();
+// userDetailsModel.userDetails = userDetails;
+
 const siteMainElement = document.querySelector('.main');
 
-const filmListPresenter = new FilmListPresenter(siteMainElement);
-filmListPresenter.init(films, filtersMenu);
+const filmListPresenter = new FilmListPresenter(siteMainElement, filmsModel);
+filmListPresenter.init(filtersMenu);
 
 const siteFooterElement = document.querySelector('.footer__statistics');
 render(siteFooterElement, new CountMoviesInsideView(FILM_COUNT), RenderPosition.AFTERBEGIN);

@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { render, RenderPosition, appendChild, removeChild, remove, replace } from '../utils/render';
 import CommentFilmView from '../view/comment-film-view';
 import NewCommentView from '../view/new-comment-view';
+import { UserAction, UpdateType } from '../utils/const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -21,7 +22,6 @@ export default class FilmPresenter {
   #newCommentComponent = null;
 
   #film = null;
-  #comment = null;
   #mode = Mode.DEFAULT;
 
   constructor(filmListContainer, changeData, changeMode) {
@@ -88,12 +88,19 @@ export default class FilmPresenter {
   }
 
   #renderCommentsFilm = () => {
+    this.#film.comments.forEach((comment) => {
+      this.#renderComment(comment);
+    });
+  }
+
+  #renderComment = (comment) => {
     const commentsListSelector = this.#detailsFilmComponent.commentsListSelector;
 
-    this.#film.comments.forEach((comment) => {
-      const commentFilmComponent = new CommentFilmView(comment);
-      render(commentsListSelector, commentFilmComponent, RenderPosition.BEFOREEND);
-    });
+    const commentFilmComponent = new CommentFilmView(comment);
+
+    render(commentsListSelector, commentFilmComponent, RenderPosition.BEFOREEND);
+
+    commentFilmComponent.setDeleteCommentHandler(this.handleDeleteComment);
   }
 
   #renderNewComment = () => {
@@ -152,7 +159,11 @@ export default class FilmPresenter {
       },
     };
 
-    this.#changeData(updateFilm);
+    this.#changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
+      updateFilm,
+    );
   }
 
   handleToggleWatchlist = () => {
@@ -173,7 +184,11 @@ export default class FilmPresenter {
       },
     };
 
-    this.#changeData(updateFilm);
+    this.#changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
+      updateFilm,
+    );
   }
 
   handleToggleWatched = () => {
@@ -189,7 +204,11 @@ export default class FilmPresenter {
       },
     };
 
-    this.#changeData(updateFilm);
+    this.#changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
+      updateFilm,
+    );
   }
 
   handleToggleFavorite = () => {
@@ -197,10 +216,44 @@ export default class FilmPresenter {
   }
 
   #submitComment = (comment) => {
-    this.#comment = comment;
+    this.#newCommentComponent.reset();
+
+    this.#film.comments.push(comment);
+    this.#renderComment(comment);
+
+    this.#changeData(
+      UserAction.ADD_COMMENT,
+      UpdateType.MINOR,
+      {...this.#film},
+    );
   }
 
   handleSubmitComment = (comment) => {
     this.#submitComment(comment);
+  }
+
+  #deleteComment = (deletedComment) => {
+    const deletedCommentIndex = this.#film.comments.findIndex((comment) => JSON.stringify(comment) === JSON.stringify(deletedComment));
+
+    this.#film.comments = [
+      ...this.#film.comments.slice(0, deletedCommentIndex),
+      ...this.#film.comments.slice(deletedCommentIndex + 1),
+    ];
+
+    const scrollTop = this.#detailsFilmComponent.element.scrollTop;
+
+    this.init(this.#film);
+
+    this.#changeData(
+      UserAction.DELETE_COMMENT,
+      UpdateType.MINOR,
+      {...this.#film},
+    );
+
+    this.#detailsFilmComponent.element.scrollTop = scrollTop;
+  }
+
+  handleDeleteComment = (deletedComment) => {
+    this.#deleteComment(deletedComment);
   }
 }

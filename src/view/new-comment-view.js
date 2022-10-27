@@ -138,6 +138,7 @@ export default class NewCommentView extends SmartView {
 
     return ({
       ...comment,
+      author: 'You',
       isChecked,
     });
   }
@@ -149,7 +150,7 @@ export default class NewCommentView extends SmartView {
       comment.checkedEmoji = 'smile';
     }
 
-    comment.emotion = EMOJI[comment.checkedEmoji];
+    comment.emotion = comment.checkedEmoji;
     comment.comment = comment.text;
     comment.date = new Date();
 
